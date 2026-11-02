@@ -1,0 +1,7 @@
+{
+  "contestId": 519,
+  "index": "C",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    int ans = (n + m) / 3;\n    if (ans > n) ans = n;\n    if (ans > m) ans = m;\n    cout << ans << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-10-08T17:16:30"
+}
