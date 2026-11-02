@@ -1,0 +1,6 @@
+/*
+There exists many constructive solutions, here is one I think is very elegant. We will try to approach the problem by considering how much the total mass increases every night. If there are $$$x$$$ bacteria some day before the splitting, that night can have a mass increase between $$$x$$$ and $$$2x$$$ inclusive (depending on how many bacteria split that day).
+Therefore, we can reword the problem as follows: construct a sequence $$$a$$$ of minimal length $$$a_0=1, a_1, \dots, a_k$$$ such that $$$a_i \le a_{i+1} \le 2a_i$$$ and the sum of $$$a_i$$$ is $$$n$$$. To minimize the length of sequence $$$a$$$, we will start building our sequence with $$$1, 2, \dots, 2^x$$$ such that the total sum $$$s$$$ is less than or equal to $$$n$$$. If the total sum is $$$n$$$, we are done. Otherwise, we insert $$$n-s$$$ into our sequence and sort. This gives a valid sequence of minimal length.
+To transform our sequence $$$a$$$ into the answer, we can just print the differences $$$a_i-a_{i-1}$$$ because the number of bacteria that split during the day is equal to how much the mass increase changes.
+Time complexity for each test case: $$$O(\log{n})$$$, if you sort by insertion
+*/
