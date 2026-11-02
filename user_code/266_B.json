@@ -1,0 +1,7 @@
+{
+  "contestId": 266,
+  "index": "B",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, t;\n    cin >> n >> t;\n    string s;\n    cin >> s;\n    for (int step = 0; step < t; ++step)\n        for (int i = 0; i < n - 1; ++i)\n            if (s[i] == 'B' && s[i + 1] == 'G') {\n                swap(s[i], s[i + 1]);\n                ++i;\n            }\n    cout << s << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-10-08T17:13:13"
+}
