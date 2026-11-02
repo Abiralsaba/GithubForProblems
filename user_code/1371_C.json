@@ -1,0 +1,7 @@
+{
+  "contestId": 1371,
+  "index": "C",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        long long a, b, n, m;\n        cin >> a >> b >> n >> m;\n        if (a + b >= n + m && min(a, b) >= m)\n            cout << \"Yes\" << endl;\n        else\n            cout << \"No\" << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-07T00:34:57"
+}
