@@ -1,0 +1,7 @@
+{
+  "contestId": 1030,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    int s = a + b + c;\n    if (s <= 1) cout << \"YES\" << endl;\n    else cout << \"NO\" << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-10-08T17:12:54"
+}
