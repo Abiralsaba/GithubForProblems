@@ -1,0 +1,7 @@
+{
+  "contestId": 110,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    string s;\n    cin >> s;\n    int cnt = 0;\n    for (char c : s) if (c == '4' || c == '7') cnt++;\n    string t = to_string(cnt);\n    bool lucky = true;\n    for (char c : t) if (c != '4' && c != '7') lucky = false;\n    if (lucky) cout << \"YES\" << endl;\n    else cout << \"NO\" << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:26:07"
+}
