@@ -1,0 +1,7 @@
+{
+  "contestId": 263,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n  int r = -1, c = -1;\n  for (int i = 0; i < 5; i++)\n    for (int j = 0; j < 5; j++) {\n      int x; cin >> x;\n      if (x == 1) { r = i; c = j; }\n    }\n  int moves = abs(r - 2) + abs(c - 2);\n  cout << moves << endl;\n  return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-08-28T21:31:03"
+}
