@@ -1,0 +1,7 @@
+{
+  "contestId": 451,
+  "index": "B",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    int a[n], b[n];\n    for (int i = 0; i < n; i++) cin >> a[i];\n    for (int i = 0; i < n; i++) b[i] = a[i];\n    sort(b, b + n);\n    int l = -1, r = -1;\n    for (int i = 0; i < n; i++) {\n        if (a[i] != b[i]) {\n            l = i;\n            break;\n        }\n    }\n    if (l == -1) {\n        cout << \"yes\" << endl;\n        cout << \"1 1\" << endl;\n        return 0;\n    }\n    for (int i = n - 1; i >= 0; i--) {\n        if (a[i] != b[i]) {\n            r = i;\n            break;\n        }\n    }\n    reverse(a + l, a + r + 1);\n    bool ok = true;\n    for (int i = 0; i < n; i++) {\n        if (a[i] != b[i]) {\n            ok = false;\n            break;\n        }\n    }\n    if (ok) {\n        cout << \"yes\" << endl;\n        cout << l + 1 << \" \" << r + 1 << endl;\n    } else {\n        cout << \"no\" << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-08-29T00:08:24"
+}
