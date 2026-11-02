@@ -1,0 +1,7 @@
+{
+  "contestId": 266,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\n   using namespace std;\n\n   int main() {\n       int n;\n       cin >> n;\n       string s;\n       cin >> s;\n       int ans = 0;\n       for (int i = 1; i < n; i++) {\n           if (s[i] == s[i - 1]) ans++;\n       }\n       cout << ans << endl;\n       return 0;\n   }",
+  "language": "cpp",
+  "savedAt": "2026-09-06T21:00:26"
+}
