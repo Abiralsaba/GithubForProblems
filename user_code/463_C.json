@@ -1,0 +1,7 @@
+{
+  "contestId": 463,
+  "index": "C",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    const int SHIFT = 2000;\n    const int MAXD = 4005;               // enough for [-1999,1999] after shift\n    long long mx[2][MAXD];\n    for (int p = 0; p < 2; p++)\n        for (int i = 0; i < MAXD; i++) mx[p][i] = 0;\n    for (int i = 0; i < n; i++) {\n        int x, y;\n        long long a;\n        cin >> x >> y >> a;\n        int id = x - y + SHIFT;\n        int par = (x + y) & 1;\n        if (a > mx[par][id]) mx[par][id] = a;\n    }\n    long long ans = 0;\n    for (int p = 0; p < 2; p++)\n        for (int i = 0; i < MAXD; i++) ans += mx[p][i];\n    cout << ans << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-08-28T22:02:25"
+}
