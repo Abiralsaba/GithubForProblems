@@ -1,0 +1,7 @@
+{
+  "contestId": 282,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n  int n;\n  cin >> n;\n  int x = 0;\n  for (int i = 0; i < n; i++) {\n    string s;\n    cin >> s;\n    if (s[0] == '+' || s[1] == '+') x++;\n    else x--;\n  }\n  cout << x << endl;\n  return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-08-28T21:27:53"
+}
