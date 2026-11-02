@@ -1,0 +1,7 @@
+{
+  "contestId": 59,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    string s;\n    cin >> s;\n    char c = tolower(s.back());\n    if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' || c == 'y')\n        cout << \"YES\" << endl;\n    else\n        cout << \"NO\" << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:26:45"
+}
