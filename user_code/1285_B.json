@@ -1,0 +1,7 @@
+{
+  "contestId": 1285,
+  "index": "B",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        long long a[n];\n        for (int i = 0; i < n; i++) cin >> a[i];\n        long long sum = 0;\n        bool ok = true;\n        for (int i = 0; i < n - 1; i++) {\n            sum += a[i];\n            if (sum <= 0) ok = false;\n        }\n        sum = 0;\n        for (int i = n - 1; i > 0; i--) {\n            sum += a[i];\n            if (sum <= 0) ok = false;\n        }\n        if (ok) cout << \"YES\" << endl;\n        else cout << \"NO\" << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-01T23:52:08"
+}
