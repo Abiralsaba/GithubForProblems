@@ -1,0 +1,7 @@
+{
+  "contestId": 281,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\n   using namespace std;\n\n   int main() {\n       string s;\n       cin >> s;\n       s[0] = s[0] - 'a' + 'A';\n       cout << s << endl;\n       return 0;\n   }",
+  "language": "cpp",
+  "savedAt": "2026-09-02T00:02:54"
+}
