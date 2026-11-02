@@ -1,0 +1,7 @@
+{
+  "contestId": 4,
+  "index": "C",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n  int n;\n  if (!(cin >> n))\n    return 0;\n  map<string, int> database;\n  for (int i = 0; i < n; i++) {\n    string s;\n    cin >> s;\n    if (database.count(s) == 0) {\n      cout << \"OK\" << endl;\n      database[s] = 1;\n    } else {\n      // Find the first suffix that is not yet registered\n      while (database.count(s + to_string(database[s])))\n        database[s]++;\n      string new_name = s + to_string(database[s]);\n      cout << new_name << endl;\n      // Register both the new name and update the base name's counter\n      database[new_name] = 1;\n      database[s]++;\n    }\n  }\n  return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-08-29T00:06:47"
+}
