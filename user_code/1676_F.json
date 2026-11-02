@@ -1,0 +1,7 @@
+{
+  "contestId": 1676,
+  "index": "F",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n, k;\n        cin >> n >> k;\n        int a[n];\n        map<int, int> mp;\n        for (int i = 0; i < n; i++) {\n            cin >> a[i];\n            mp[a[i]]++;\n        }\n        vector<int> v;\n        for (auto p : mp)\n            if (p.second >= k) v.push_back(p.first);\n        if (v.empty()) {\n            cout << -1 << endl;\n            continue;\n        }\n        int best_l = v[0];\n        int best_r = v[0];\n        int max_len = 0;\n        int start = 0;\n        for (int i = 1; i < v.size(); i++) {\n            if (v[i] == v[i - 1] + 1) {\n                if (v[i] - v[start] > max_len) {\n                    max_len = v[i] - v[start];\n                    best_l = v[start];\n                    best_r = v[i];\n                }\n            }\n            else\n                start = i;\n        }\n        cout << best_l << \" \" << best_r << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-10-08T17:14:53"
+}
