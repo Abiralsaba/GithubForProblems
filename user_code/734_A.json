@@ -1,0 +1,7 @@
+{
+  "contestId": 734,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    string s;\n    cin >> s;\n    int cntA = 0, cntD = 0;\n    for (int i = 0; i < n; i++)\n        if (s[i] == 'A') cntA++;\n        else cntD++;\n    if (cntA > cntD) cout << \"Anton\" << endl;\n    else if (cntD > cntA) cout << \"Danik\" << endl;\n    else cout << \"Friendship\" << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:51:01"
+}
