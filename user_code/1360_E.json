@@ -1,0 +1,7 @@
+{
+  "contestId": 1360,
+  "index": "E",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        string a[n];\n        for (int i = 0; i < n; i++) cin >> a[i];\n        bool ok = true;\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                if (a[i][j] == '1') {\n                    if (i < n - 1 && j < n - 1) {\n                        if (a[i + 1][j] == '0' && a[i][j + 1] == '0') ok = false;\n                    }\n                }\n            }\n        }\n        if (ok) cout << \"YES\" << endl;\n        else cout << \"NO\" << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T21:05:07"
+}
