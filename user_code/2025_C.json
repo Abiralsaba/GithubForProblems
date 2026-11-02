@@ -1,0 +1,7 @@
+{
+  "contestId": 2025,
+  "index": "C",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n, k;\n        cin >> n >> k;\n        int a[n];\n        for (int i = 0; i < n; i++) cin >> a[i];\n        sort(a, a + n);\n        int ans = 0;\n        int l = 0;\n        for (int r = 0; r < n; r++) {\n            if (r > 0 && a[r] - a[r - 1] > 1) l = r;\n            while (a[r] - a[l] >= k) l++;\n            ans = max(ans, r - l + 1);\n        }\n        cout << ans << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-10-08T17:14:36"
+}
