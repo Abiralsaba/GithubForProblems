@@ -1,0 +1,7 @@
+{
+  "contestId": 116,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    int cur = 0, ans = 0;\n    while (n--) {\n        int a, b;\n        cin >> a >> b;\n        cur -= a;\n        cur += b;\n        if (cur > ans) ans = cur;\n    }\n    cout << ans << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-10-08T17:12:38"
+}
