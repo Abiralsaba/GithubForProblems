@@ -1,0 +1,7 @@
+{
+  "contestId": 1850,
+  "index": "F",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        int cnt[n + 1];\n        for (int i = 0; i <= n; i++) cnt[i] = 0;\n        for (int i = 0; i < n; i++) {\n            int x;\n            cin >> x;\n            if (x <= n) cnt[x]++;\n        }\n        int ans[n + 1];\n        for (int i = 0; i <= n; i++) ans[i] = 0;\n        for (int i = 1; i <= n; i++) {\n            if (cnt[i] == 0) continue;\n            for (int j = i; j <= n; j += i) ans[j] += cnt[i];\n        }\n        int max_frogs = 0;\n        for (int i = 1; i <= n; i++) {\n            if (ans[i] > max_frogs) max_frogs = ans[i];\n        }\n        cout << max_frogs << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:27:20"
+}
