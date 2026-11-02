@@ -1,0 +1,7 @@
+{
+  "contestId": 41,
+  "index": "A",
+  "code": "(t[i] - 'a') = ( (s[i] - 'a') + k ) mod 26",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:51:37"
+}
