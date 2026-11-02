@@ -1,0 +1,7 @@
+{
+  "contestId": 977,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, k;\n    cin >> n >> k;\n    while (k--) {\n        if (n % 10 != 0) n--;\n        else n /= 10;\n    }\n    cout << n << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:25:44"
+}
