@@ -1,0 +1,7 @@
+{
+  "contestId": 1203,
+  "index": "C",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    long long a[n];\n    for (int i = 0; i < n; i++) cin >> a[i];\n    long long g = a[0];\n    for (int i = 1; i < n; i++) g = std::gcd(g, a[i]);\n    long long ans = 0;\n    for (long long i = 1; i * i <= g; i++) {\n        if (g % i == 0) {\n            ans++;\n            if (i * i != g) ans++;\n        }\n    }\n    cout << ans << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:27:32"
+}
