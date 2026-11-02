@@ -1,0 +1,7 @@
+{
+  "contestId": 791,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\n   using namespace std;\n\n   int main() {\n       int a, b;\n       cin >> a >> b;\n       int years = 0;\n       while (a <= b) {\n           a *= 3;\n           b *= 2;\n           years++;\n       }\n       cout << years << endl;\n       return 0;\n   }",
+  "language": "cpp",
+  "savedAt": "2026-09-06T20:59:29"
+}
