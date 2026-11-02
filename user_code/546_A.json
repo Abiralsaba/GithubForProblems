@@ -1,0 +1,7 @@
+{
+  "contestId": 546,
+  "index": "A",
+  "code": "total = w * k + w * (w - 1) / 2",
+  "language": "cpp",
+  "savedAt": "2026-09-06T21:01:28"
+}
