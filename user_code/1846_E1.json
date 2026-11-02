@@ -1,0 +1,7 @@
+{
+  "contestId": 1846,
+  "index": "E1",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nbool valid[1000005];\n\nint main() {\n    for (int i = 0; i <= 1000000; i++) valid[i] = false;\n    for (long long k = 2; k <= 1000; k++) {\n        long long sum = 1 + k + k * k;\n        long long val = k * k;\n        while (sum <= 1000000) {\n            valid[sum] = true;\n            val *= k;\n            sum += val;\n        }\n    }\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        if (valid[n]) cout << \"YES\" << endl;\n        else cout << \"NO\" << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:27:04"
+}
