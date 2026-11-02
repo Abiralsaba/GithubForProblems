@@ -1,0 +1,7 @@
+{
+  "contestId": 545,
+  "index": "D",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    int a[n];\n    for (int i = 0; i < n; i++)\n        cin >> a[i];\n    sort(a, a + n);\n    long long sum = 0;\n    int ans = 0;\n    for (int i = 0; i < n; i++) {\n        if (sum <= a[i]) {\n            sum += a[i];\n            ans++;\n        }\n    }\n    cout << ans << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-01T23:53:38"
+}
