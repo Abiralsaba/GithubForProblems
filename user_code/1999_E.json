@@ -1,0 +1,7 @@
+{
+  "contestId": 1999,
+  "index": "E",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint f[200005];\nint pref[200005];\n\nint main() {\n    f[0] = 0;\n    pref[0] = 0;\n    for (int i = 1; i <= 200000; i++) f[i] = f[i / 3] + 1;\n    for (int i = 1; i <= 200000; i++) pref[i] = pref[i - 1] + f[i];\n    int t;\n    cin >> t;\n    while (t--) {\n        int l, r;\n        cin >> l >> r;\n        cout << 2 * f[l] + pref[r] - pref[l] << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-07T00:34:10"
+}
