@@ -1,0 +1,7 @@
+{
+  "contestId": 1955,
+  "index": "C",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        long long k;\n        cin >> n >> k;\n        long long a[n];\n        for (int i = 0; i < n; i++) cin >> a[i];\n        long long sum = 0;\n        for (int i = 0; i < n; i++) sum += a[i];\n        if (k >= sum) {\n            cout << n << endl;\n            continue;\n        }\n        long long k_left = (k + 1) / 2;\n        long long k_right = k / 2;\n        int l = 0;\n        int r = n - 1;\n        while (l <= r && k_left > 0) {\n            if (a[l] <= k_left) {\n                k_left -= a[l];\n                l++;\n            } else {\n                a[l] -= k_left;\n                k_left = 0;\n            }\n        }\n        while (l <= r && k_right > 0) {\n            if (a[r] <= k_right) {\n                k_right -= a[r];\n                r--;\n            } else {\n                a[r] -= k_right;\n                k_right = 0;\n            }\n        }\n        int ans = n - (r - l + 1);\n        cout << ans << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T22:27:54"
+}
