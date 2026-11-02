@@ -1,0 +1,7 @@
+{
+  "contestId": 1352,
+  "index": "D",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        int a[n];\n        for (int i = 0; i < n; i++) cin >> a[i];\n        int l = 0;\n        int r = n - 1;\n        int alice_total = 0;\n        int bob_total = 0;\n        int moves = 0;\n        int prev_round = 0;\n        int turn = 0;\n        while (l <= r) {\n            int curr_round = 0;\n            if (turn == 0) {\n                while (l <= r && curr_round <= prev_round) {\n                    curr_round += a[l];\n                    l++;\n                }\n                alice_total += curr_round;\n            } else {\n                while (l <= r && curr_round <= prev_round) {\n                    curr_round += a[r];\n                    r--;\n                }\n                bob_total += curr_round;\n            }\n            prev_round = curr_round;\n            moves++;\n            turn = 1 - turn;\n        }\n        cout << moves << \" \" << alice_total << \" \" << bob_total << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-01T23:53:10"
+}
