@@ -1,0 +1,7 @@
+{
+  "contestId": 236,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\n   using namespace std;\n\n   int main() {\n       string s;\n       cin >> s;\n       bool seen[26];\n       for(int i = 0; i < 26; i++) seen[i] = false;\n       int distinct = 0;\n       for(int i = 0; i < s.length(); i++) {\n           int idx = s[i] - 'a';\n           if(!seen[idx]) {\n               seen[idx] = true;\n               distinct++;\n           }\n       }\n       if(distinct % 2 == 1) cout << \"CHAT WITH HER!\" << endl;\n       else cout << \"IGNORE HIM!\" << endl;\n       return 0;\n   }",
+  "language": "cpp",
+  "savedAt": "2026-09-02T00:01:59"
+}
