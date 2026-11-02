@@ -1,0 +1,7 @@
+{
+  "contestId": 450,
+  "index": "B",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    long long x, y, n;\n    cin >> x >> y >> n;\n    long long a[6];\n    a[1] = x;\n    a[2] = y;\n    a[3] = y - x;\n    a[4] = -x;\n    a[5] = -y;\n    a[0] = x - y;\n    long long ans = a[n % 6];\n    long long mod = 1000000007;\n    ans = (ans % mod + mod) % mod;\n    cout << ans << endl;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-09-06T21:05:53"
+}
