@@ -1,0 +1,7 @@
+{
+  "contestId": 112,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n  string s1, s2;\n  cin >> s1 >> s2;\n  for (char &c : s1) c = tolower(c);\n  for (char &c : s2) c = tolower(c);\n  if (s1 < s2) cout << -1 << endl;\n  else if (s1 > s2) cout << 1 << endl;\n  else cout << 0 << endl;\n  return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-08-28T21:31:44"
+}
