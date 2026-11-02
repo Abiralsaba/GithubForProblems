@@ -1,0 +1,7 @@
+{
+  "contestId": 1341,
+  "index": "B",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n, k;\n        cin >> n >> k;\n        int a[n];\n        for (int i = 0; i < n; i++) cin >> a[i];\n        int is_peak[n];\n        for (int i = 0; i < n; i++) is_peak[i] = 0;\n        for (int i = 1; i < n - 1; i++) if (a[i] > a[i - 1] && a[i] > a[i + 1]) is_peak[i] = 1;\n        int pref[n];\n        pref[0] = is_peak[0];\n        for (int i = 1; i < n; i++) pref[i] = pref[i - 1] + is_peak[i];\n        int max_peaks = -1;\n        int best_l = 1;\n        for (int l = 0; l <= n - k; l++) {\n            int r = l + k - 1;\n            int peaks = pref[r - 1] - pref[l];\n            if (peaks > max_peaks) {\n                max_peaks = peaks;\n                best_l = l + 1;\n            }\n        }\n        cout << max_peaks + 1 << \" \" << best_l << endl;\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-10-08T17:15:38"
+}
