@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "4",
+  "index": "median-of-two-sorted-arrays",
+  "code": "class Solution {\npublic:\n    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {\n        if (nums1.size() > nums2.size()) return findMedianSortedArrays(nums2, nums1);\n        int m = nums1.size(), n = nums2.size();\n        int l = 0, r = m;\n        while (l <= r) {\n            int i = (l + r) / 2;\n            int j = (m + n + 1) / 2 - i;\n            int mxL1 = (i == 0) ? INT_MIN : nums1[i - 1];\n            int mnR1 = (i == m) ? INT_MAX : nums1[i];\n            int mxL2 = (j == 0) ? INT_MIN : nums2[j - 1];\n            int mnR2 = (j == n) ? INT_MAX : nums2[j];\n            if (mxL1 <= mnR2 && mxL2 <= mnR1) {\n                if ((m + n) % 2 != 0) return max(mxL1, mxL2);\n                return (max(mxL1, mxL2) + min(mnR1, mnR2)) / 2.0;\n            } else if (mxL1 > mnR2) {\n                r = i - 1;\n            } else {\n                l = i + 1;\n            }\n        }\n        return 0.0;\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:42:12"
+}
