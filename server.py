@@ -412,6 +412,12 @@ class DailyGrindHandler(http.server.SimpleHTTPRequestHandler):
         except Exception as e:
             self.send_json({"success": False, "error": str(e)}, 500)
 
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+        self.send_header("Pragma", "no-cache")
+        self.send_header("Expires", "0")
+        super().end_headers()
+
     def send_json(self, data, status=200):
         """Send a JSON response."""
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
@@ -428,18 +434,23 @@ class DailyGrindHandler(http.server.SimpleHTTPRequestHandler):
             super().log_message(format, *args)
 
 
+class ThreadedHTTPServer(http.server.ThreadingHTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+
 def main():
-    import socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    result = sock.connect_ex(("localhost", PORT))
-    sock.close()
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", line_buffering=True)
+        sys.stderr.reconfigure(encoding="utf-8", line_buffering=True)
+    except Exception:
+        pass
 
-    if result == 0:
-        print(f"[!] Port {PORT} is already in use.")
-        print(f"    Either close the other server or change PORT in server.py")
+    try:
+        server = ThreadedHTTPServer(("127.0.0.1", PORT), DailyGrindHandler)
+    except OSError as e:
+        print(f"[!] Could not bind to port {PORT}: {e}")
         sys.exit(1)
-
-    server = http.server.HTTPServer(("0.0.0.0", PORT), DailyGrindHandler)
 
     print(r"""
    _     ____    ____        _ _          ____       _           _ 
@@ -448,12 +459,12 @@ def main():
   | |__| |___   | |_| | (_| | | | |_| | | |_| | |   | | | | | (_| |
   |_____\____|  |____/ \__,_|_|_|\__, |  \____|_|   |_|_| |_|\__,_|
                                  |___/                              
-    """)
-    print(f"  Server running at: http://localhost:{PORT}")
-    print(f"  Code storage dir:  {CODE_DIR}")
-    print(f"  LC problem cache:  {LC_CACHE_DIR}")
-    print(f"  C++ compiler:      {CPP_COMPILER or 'Not found'}")
-    print(f"  Press Ctrl+C to stop\n")
+    """, flush=True)
+    print(f"  Server running at: http://localhost:{PORT}", flush=True)
+    print(f"  Code storage dir:  {CODE_DIR}", flush=True)
+    print(f"  LC problem cache:  {LC_CACHE_DIR}", flush=True)
+    print(f"  C++ compiler:      {CPP_COMPILER or 'Not found'}", flush=True)
+    print(f"  Press Ctrl+C to stop\n", flush=True)
 
     try:
         webbrowser.open(f"http://localhost:{PORT}")
@@ -463,7 +474,7 @@ def main():
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\n  Server stopped. Goodbye!")
+        print("\n  Server stopped. Goodbye!", flush=True)
         server.server_close()
 
 
