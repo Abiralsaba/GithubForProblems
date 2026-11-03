@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "189",
+  "index": "rotate-array",
+  "code": "class Solution {\nprivate:\n    void rev(vector<int>& nums, int l, int r) {\n        while (l < r) {\n            int tmp = nums[l];\n            nums[l] = nums[r];\n            nums[r] = tmp;\n            l++;\n            r--;\n        }\n    }\n\npublic:\n    void rotate(vector<int>& nums, int k) {\n        int n = nums.size();\n        k %= n;\n        if (k == 0) return;\n        rev(nums, 0, n - 1);\n        rev(nums, 0, k - 1);\n        rev(nums, k, n - 1);\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:35:35"
+}
