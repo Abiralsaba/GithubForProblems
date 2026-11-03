@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "41",
+  "index": "first-missing-positive",
+  "code": "class Solution {\npublic:\n    int firstMissingPositive(vector<int>& nums) {\n        int n = nums.size();\n        for (int i = 0; i < n; i++) {\n            while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) {\n                swap(nums[i], nums[nums[i] - 1]);\n            }\n        }\n        for (int i = 0; i < n; i++)\n            if (nums[i] != i + 1) return i + 1;\n        return n + 1;\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:48:11"
+}
