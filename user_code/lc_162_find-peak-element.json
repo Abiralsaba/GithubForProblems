@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "162",
+  "index": "find-peak-element",
+  "code": "class Solution {\npublic:\n    int findPeakElement(vector<int>& nums) {\n        int l = 0, r = (int)nums.size() - 1;\n        while (l < r) {\n            int mid = l + (r - l) / 2;\n            if (nums[mid] < nums[mid + 1]) l = mid + 1;\n            else r = mid;\n        }\n        return l;\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:39:34"
+}
