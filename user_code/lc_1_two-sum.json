@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "1",
+  "index": "two-sum",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        unordered_map<int,int> mp;\n        for (int i = 0; i < (int)nums.size(); i++) {\n            int need = target - nums[i];\n            if (mp.find(need) != mp.end()) return {mp[need], i};\n            mp[nums[i]] = i;\n        }\n        return {};\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:32:01"
+}
