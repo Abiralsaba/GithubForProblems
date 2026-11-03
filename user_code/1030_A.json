@@ -1,7 +1,8 @@
 {
-  "contestId": 1030,
+  "platform": "codeforces",
+  "contestId": "1030",
   "index": "A",
-  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int a, b, c;\n    cin >> a >> b >> c;\n    int s = a + b + c;\n    if (s <= 1) cout << \"YES\" << endl;\n    else cout << \"NO\" << endl;\n    return 0;\n}",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    int n, ok = 0;\n    cin >> n;\n    for (int i = 0; i < n; i++) {\n        int x;\n        cin >> x;\n        if (x == 1) ok = 1;\n    }\n    if (ok) cout << \"HARD\\n\";\n    else cout << \"EASY\\n\";\n    return 0;\n}",
   "language": "cpp",
-  "savedAt": "2026-10-08T17:12:54"
+  "savedAt": "2026-11-04T00:07:00"
 }
