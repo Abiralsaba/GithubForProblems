@@ -1,0 +1,8 @@
+{
+  "platform": "codeforces",
+  "contestId": "228",
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){\n    int a[4];\n    for(int i=0;i<4;i++) cin>>a[i];\n    set<int> s;\n    for(int i=0;i<4;i++) s.insert(a[i]);\n    int ans=4-(int)s.size();\n    cout<<ans;\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-11-04T00:45:11"
+}
