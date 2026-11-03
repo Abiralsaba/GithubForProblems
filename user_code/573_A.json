@@ -1,0 +1,8 @@
+{
+  "platform": "codeforces",
+  "contestId": 573,
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    int a[n];\n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n        while (a[i] % 2 == 0) a[i] /= 2;\n        while (a[i] % 3 == 0) a[i] /= 3;\n    }\n    bool ok = true;\n    for (int i = 1; i < n; i++)\n        if (a[i] != a[0]) ok = false;\n    if (ok) cout << \"YES\\n\";\n    else cout << \"NO\\n\";\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-11-04T00:02:25"
+}
