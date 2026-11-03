@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "283",
+  "index": "move-zeroes",
+  "code": "class Solution {\npublic:\n    void moveZeroes(vector<int>& nums) {\n        int p = 0;\n        for (int i = 0; i < (int)nums.size(); i++)\n            if (nums[i] != 0) {\n                int t = nums[p];\n                nums[p] = nums[i];\n                nums[i] = t;\n                p++;\n            }\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:32:54"
+}
