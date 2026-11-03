@@ -1,0 +1,8 @@
+{
+  "platform": "codeforces",
+  "contestId": "1899",
+  "index": "E",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\nstruct BIT{\n    int n;\n    vector<int> t;\n    BIT(int n):n(n),t(n+1,0){}\n    void add(int i,int v){for(;i<=n;i+=i&-i) t[i]+=v;}\n    int sum(int i){int r=0;for(;i>0;i-=i&-i) r+=t[i];return r;}\n    int range(int l,int r){if(l>r) return 0;return sum(r)-sum(l-1);}\n};\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int T;cin>>T;\n    while(T--){\n        int n;cin>>n;\n        vector<int> a(n+1), pos(n+1);\n        for(int i=1;i<=n;i++) cin>>a[i], pos[a[i]]=i;\n        BIT bit(n);\n        for(int i=1;i<=n;i++) bit.add(i,1);\n        long long ans=0;\n        int cur=1;\n        for(int v=1;v<=n;v++){\n            int p=pos[v];\n            if(p>=cur) ans+=bit.range(cur,p);\n            else ans+=bit.range(cur,n)+bit.range(1,p);\n            bit.add(p,-1);\n            cur=p+1;\n            if(cur>n) cur=1;\n            while(bit.range(cur,cur)==0){\n                cur++;\n                if(cur>n) cur=1;\n            }\n        }\n        cout<<ans<<\"\\n\";\n    }\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-11-04T00:46:55"
+}
