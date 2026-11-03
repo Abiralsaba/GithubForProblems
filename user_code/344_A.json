@@ -1,0 +1,8 @@
+{
+  "platform": "codeforces",
+  "contestId": "344",
+  "index": "A",
+  "code": "#include <bits/stdc++.h>\nusing namespace std;\nint main() {\n    int n;\n    cin >> n;\n    string prev, cur;\n    cin >> prev;\n    int ans = 1;\n    for (int i = 1; i < n; i++) {\n        cin >> cur;\n        if (cur != prev) ans++;\n        prev = cur;\n    }\n    cout << ans << '\\n';\n    return 0;\n}",
+  "language": "cpp",
+  "savedAt": "2026-11-04T00:01:39"
+}
