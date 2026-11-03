@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "48",
+  "index": "rotate-image",
+  "code": "class Solution {\npublic:\n    void rotate(vector<vector<int>>& matrix) {\n        int n = matrix.size();\n        for (int i = 0; i < n; i++)\n            for (int j = i + 1; j < n; j++)\n                swap(matrix[i][j], matrix[j][i]);\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < n / 2; j++)\n                swap(matrix[i][j], matrix[i][n - 1 - j]);\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:38:19"
+}
