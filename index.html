@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=29">
 </head>
 <body>
     <div id="app">
@@ -294,20 +294,18 @@
                             <small style="opacity:0.5; display:block; margin-top:4px; margin-bottom:8px;">Get key from <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent-primary)">aistudio.google.com</a></small>
                             <label for="gemini-medium-model-input" style="font-size: 12px;">Medium Model</label>
                             <select id="gemini-medium-model-input" class="settings-select" style="margin-bottom: 8px;">
-                                <option value="gemini-2.5-flash">gemini-2.5-flash</option>
                                 <option value="gemini-3.5-flash">gemini-3.5-flash</option>
                                 <option value="gemini-3.7-flash">gemini-3.7-flash</option>
-                                <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+                                <option value="gemini-2.0-pro-exp">gemini-2.0-pro-exp</option>
                                 <option value="openai/gpt-oss-120b">openai/gpt-oss-120b (Groq)</option>
                                 <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Groq)</option>
                                 <option value="qwen/qwen3.6-27b">qwen/qwen3.6-27b (Groq)</option>
                             </select>
                             <label for="gemini-hard-model-input" style="font-size: 12px;">Hard Model</label>
                             <select id="gemini-hard-model-input" class="settings-select">
-                                <option value="gemini-2.5-pro">gemini-2.5-pro</option>
                                 <option value="gemini-3.7-flash">gemini-3.7-flash</option>
                                 <option value="gemini-3.5-flash">gemini-3.5-flash</option>
-                                <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+                                <option value="gemini-2.0-pro-exp">gemini-2.0-pro-exp</option>
                                 <option value="openai/gpt-oss-120b">openai/gpt-oss-120b (Groq)</option>
                                 <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Groq)</option>
                                 <option value="qwen/qwen3.6-27b">qwen/qwen3.6-27b (Groq)</option>
@@ -346,6 +344,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=29"></script>
 </body>
 </html>
