@@ -32,8 +32,8 @@ let batchRunning = false;
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 const GROQ_API_BASE = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL_EASY = 'openai/gpt-oss-120b';
-const GEMINI_MODEL_MEDIUM = 'gemini-2.5-flash';
-const GEMINI_MODEL_PRIMARY = 'gemini-2.5-pro';
+const GEMINI_MODEL_MEDIUM = 'gemini-3.5-flash';
+const GEMINI_MODEL_PRIMARY = 'gemini-3.7-flash';
 
 const LANGUAGES = [
     { value: 'cpp', label: 'C++' },
@@ -121,8 +121,10 @@ When analyzing a problem, provide:
 ## Problem Analysis
 ## Key Observations
 ## Approach
+Do NOT use triple-backtick code blocks in the Approach section — reserve triple-backtick code blocks ONLY for the final C++ solution in the Solution Code section.
+
 ## Solution Code
-Provide a clean C++ solution that strictly matches the user's coding style:
+Provide a clean C++ solution inside a \`\`\`cpp code block that strictly matches the user's coding style:
 1. Always start with:
 #include <bits/stdc++.h>
 using namespace std;
@@ -144,6 +146,19 @@ using namespace std;
 - **Space:** O(...)
 
 ## Common Pitfalls`;
+
+const AI_FAST_CODE_PROMPT_CF = `You are an elite competitive programmer.
+First, write a brief 2-line summary recalling the exact official Codeforces problem statement, input format, and required output for the given Contest ID + Problem Index. Do NOT use any triple-backtick fences in this 2-line summary.
+Then, output a single \`\`\`cpp code block containing the complete, optimal C++ solution strictly in the user's coding style:
+1. Always start with:
+#include <bits/stdc++.h>
+using namespace std;
+2. ZERO COMMENTS: Do NOT include any '//' or '/* */' comments inside the C++ code.
+3. ZERO MACROS: Do NOT use '#define', 'typedef', 'pb', 'all()'.
+4. Use short variable names ('n', 'm', 'a', 'b', 'ans', 'mn', 'mx', 'cnt', 'ok', 'vis', 'dp').
+5. Omit curly braces {} for short single-line 'if' statements and 'for' loops.
+6. Declare local arrays using C-style arrays ('int a[n];') where appropriate, and cast '(int)v.size()' in loops.
+7. End main() with 'return 0;'.`;
 
 // ========================
 // Initialization
@@ -306,7 +321,8 @@ function hideLoading() {
 async function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         try {
-            await navigator.serviceWorker.register('/sw.js');
+            const reg = await navigator.serviceWorker.register('/sw.js?v=29');
+            reg.update();
         } catch (err) {}
     }
 }
@@ -371,11 +387,16 @@ function saveSettings() {
     setTimeout(() => closeSettings(), 900);
 }
 
+function cleanLegacy25Model(m, fallback) {
+    if (!m || m.startsWith('gemini-2.5')) return fallback;
+    return m;
+}
+
 function getGeminiKey() { return localStorage.getItem('cf-daily-grind-api-key') || ''; }
 function getGroqKey() { return localStorage.getItem('cf-daily-grind-groq-key') || ''; }
-function getEasyModel() { return localStorage.getItem('cf-daily-grind-model-easy') || GROQ_MODEL_EASY; }
-function getMediumModel() { return localStorage.getItem('cf-daily-grind-model-medium') || GEMINI_MODEL_MEDIUM; }
-function getHardModel() { return localStorage.getItem('cf-daily-grind-model-hard') || GEMINI_MODEL_PRIMARY; }
+function getEasyModel() { return cleanLegacy25Model(localStorage.getItem('cf-daily-grind-model-easy'), GROQ_MODEL_EASY); }
+function getMediumModel() { return cleanLegacy25Model(localStorage.getItem('cf-daily-grind-model-medium'), GEMINI_MODEL_MEDIUM); }
+function getHardModel() { return cleanLegacy25Model(localStorage.getItem('cf-daily-grind-model-hard'), GEMINI_MODEL_PRIMARY); }
 function getAutoSolveMode() { return localStorage.getItem('daily-grind-autosolve-mode') || 'fast'; }
 
 // ========================
@@ -602,7 +623,7 @@ function renderProblemCards(containerId, problems, showDayBadge = false) {
 
             const cachedHTML = aiCache[key];
             const isCurrentlyStreaming = aiStreaming[key];
-            const modelLabel = p.difficulty === 'easy' && getGroqKey()
+            const modelLabel = p.difficulty === 'easy'
                 ? getEasyModel()
                 : (p.difficulty === 'medium' ? getMediumModel() : getHardModel());
 
@@ -794,6 +815,8 @@ async function autoSolveProblem(event, contestId, index) {
     }
 }
 
+let lastAIError = '';
+
 async function batchGenerateDay() {
     if (batchRunning || !scheduleData) return;
     const dayData = scheduleData.schedule[currentDay - 1];
@@ -811,24 +834,57 @@ async function batchGenerateDay() {
     }
 
     batchRunning = true;
-    const origText = btn ? btn.innerHTML : '';
+    const origText = btn ? btn.innerHTML : '⚡ Auto-Generate Day\'s Solutions';
+    let solvedCount = 0;
 
     for (let i = 0; i < targets.length; i++) {
         const p = targets[i];
+        const key = `${p.contestId}_${p.index}`;
+        const displayId = formatProblemDisplayId(p);
+
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = `⏳ Solving ${i + 1}/${targets.length}: #${p.contestId}...`;
+            btn.innerHTML = `⏳ Solving ${i + 1}/${targets.length} (${solvedCount} saved): ${displayId}...`;
         }
-        await requestAIExplanation(p.contestId, p.index, true, true);
-        await saveCode(p.contestId, p.index, true);
+
+        const rowBtn = document.getElementById(`autosolve-btn-${key}`);
+        if (rowBtn) {
+            rowBtn.innerHTML = '⏳';
+            rowBtn.classList.add('loading');
+        }
+
+        let ok = await requestAIExplanation(p.contestId, p.index, true, true);
+        if (!ok || !codeCache[key]?.code?.trim()) {
+            await new Promise(r => setTimeout(r, 1500));
+            ok = await requestAIExplanation(p.contestId, p.index, true, true);
+        }
+
+        if (codeCache[key]?.code?.trim()) {
+            await saveCode(p.contestId, p.index, true);
+            solvedCount++;
+        }
+
         renderCurrentView();
+
+        if (i + 1 < targets.length) {
+            await new Promise(r => setTimeout(r, 900));
+        }
     }
 
     batchRunning = false;
     if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '✅ Day Solutions Ready!';
-        setTimeout(() => { btn.innerHTML = origText; }, 3000);
+        if (solvedCount === targets.length) {
+            btn.innerHTML = `✅ Solved All (${solvedCount}/${targets.length})!`;
+        } else if (solvedCount > 0) {
+            btn.innerHTML = `⚠️ Solved ${solvedCount}/${targets.length} (Click to retry rest)`;
+        } else {
+            btn.innerHTML = `❌ Solved 0/${targets.length}`;
+            if (lastAIError) {
+                alert(`Could not generate solutions:\n${lastAIError}`);
+            }
+        }
+        setTimeout(() => { btn.innerHTML = origText; }, 5000);
     }
 }
 
@@ -847,8 +903,8 @@ function toggleAIPanel(event, contestId, index) {
 async function requestAIExplanation(contestId, index, regenerate, fastCodeOnly = false) {
     const key = `${contestId}_${index}`;
 
-    if (aiStreaming[key]) return;
-    if (!fastCodeOnly && aiCache[key] && !regenerate) return;
+    if (aiStreaming[key]) return false;
+    if (!fastCodeOnly && aiCache[key] && !regenerate) return true;
 
     aiStreaming[key] = true;
     const contentEl = document.getElementById(`ai-content-${key}`);
@@ -857,7 +913,7 @@ async function requestAIExplanation(contestId, index, regenerate, fastCodeOnly =
     if (!problem) {
         if (contentEl) contentEl.innerHTML = '<div class="ai-error">Problem not found.</div>';
         delete aiStreaming[key];
-        return;
+        return false;
     }
 
     const diff = problem.difficulty;
@@ -867,17 +923,19 @@ async function requestAIExplanation(contestId, index, regenerate, fastCodeOnly =
     const geminiKey = getGeminiKey();
     const groqKey = getGroqKey();
 
-    if (!isGemini && !groqKey) {
-        if (contentEl) contentEl.innerHTML = '<div class="ai-error">⚠️ No Groq API key set. Click ⚙️ Settings to enter your API key.</div>';
-        else alert('No Groq API key set. Click ⚙️ Settings to enter your API key.');
+    if (!isGemini && !groqKey && !geminiKey) {
+        lastAIError = 'No Groq or Gemini API key set in Settings.';
+        if (contentEl) contentEl.innerHTML = '<div class="ai-error">⚠️ No API key set. Click ⚙️ Settings to enter your API key.</div>';
+        else if (!batchRunning) alert('No API key set. Click ⚙️ Settings to enter your API key.');
         delete aiStreaming[key];
-        return;
+        return false;
     }
-    if (isGemini && !geminiKey) {
+    if (isGemini && !geminiKey && !groqKey) {
+        lastAIError = 'No Gemini or Groq API key set in Settings.';
         if (contentEl) contentEl.innerHTML = '<div class="ai-error">⚠️ No Gemini API key set. Click ⚙️ Settings to enter your API key.</div>';
-        else alert('No Gemini API key set. Click ⚙️ Settings to enter your API key.');
+        else if (!batchRunning) alert('No Gemini API key set. Click ⚙️ Settings to enter your API key.');
         delete aiStreaming[key];
-        return;
+        return false;
     }
 
     if (contentEl) {
@@ -915,29 +973,41 @@ async function requestAIExplanation(contestId, index, regenerate, fastCodeOnly =
 ${plainStatement ? `\n**Official Problem Description & Constraints:**\n${plainStatement}\n` : ''}
 ${cppStarter ? `\n**Exact Required C++ Starter Signature (MUST match this class & method signature):**\n\`\`\`cpp\n${cppStarter}\n\`\`\`\n` : ''}`;
     } else {
-        systemPrompt = AI_SYSTEM_PROMPT_CF;
-        userPrompt = `Analyze and explain this Codeforces problem in detail:
+        systemPrompt = fastCodeOnly ? AI_FAST_CODE_PROMPT_CF : AI_SYSTEM_PROMPT_CF;
+        userPrompt = `${fastCodeOnly ? 'First recall the exact Codeforces problem statement and I/O format, then write the complete, optimal C++ solution strictly in my coding style:' : 'Analyze and explain this Codeforces problem in detail:'}
 
-**Problem:** ${problem.contestId}${problem.index} - ${problem.name}
+**Problem:** Codeforces ${problem.contestId}${problem.index} - "${problem.name}" (Contest ${problem.contestId}, Problem ${problem.index})
 **Rating:** ${problem.rating} (${problem.difficulty})
 **Tags:** ${(problem.tags || []).join(', ')}
 **URL:** ${problem.url}
 **Solved by:** ${(problem.solvedCount || 0).toLocaleString()} users on Codeforces`;
     }
 
+    let success = false;
     try {
         let fullText = '';
-        if (isGemini) {
+        if (isGemini && geminiKey) {
+            try {
+                fullText = await streamGemini(geminiKey, modelToUse, systemPrompt, userPrompt, contentEl);
+            } catch (gemErr) {
+                console.warn('Gemini call failed, falling back to Groq:', gemErr.message);
+                if (groqKey) {
+                    fullText = await streamGroq(groqKey, getEasyModel(), systemPrompt, userPrompt, contentEl);
+                } else {
+                    throw gemErr;
+                }
+            }
+        } else if (groqKey) {
+            fullText = await streamGroq(groqKey, modelToUse.includes('gemini') ? getEasyModel() : modelToUse, systemPrompt, userPrompt, contentEl);
+        } else if (geminiKey) {
             fullText = await streamGemini(geminiKey, modelToUse, systemPrompt, userPrompt, contentEl);
-        } else {
-            fullText = await streamGroq(groqKey, modelToUse, systemPrompt, userPrompt, contentEl);
         }
 
         if (contentEl) {
             contentEl.innerHTML = renderMarkdown(fullText);
             contentEl.className = 'ai-content';
         }
-        if (!fastCodeOnly) {
+        if (!fastCodeOnly && fullText.trim()) {
             aiCache[key] = renderMarkdown(fullText);
             try {
                 const prefix = getStoragePrefix();
@@ -949,12 +1019,8 @@ ${cppStarter ? `\n**Exact Required C++ Starter Signature (MUST match this class 
             } catch (e) {}
         }
 
-        // Extract C++ code block (or raw class Solution if model omitted fences)
-        const codeMatch = fullText.match(/```(?:cpp|c\+\+|c|C\+\+)?\s*\n([\s\S]*?)```/);
-        let extractedCode = codeMatch && codeMatch[1] ? codeMatch[1].trim() : '';
-        if (!extractedCode && fastCodeOnly && fullText.includes('class Solution')) {
-            extractedCode = fullText.trim();
-        }
+        // Extract C++ code block reliably (never match pseudocode blocks!)
+        let extractedCode = extractCppCodeBlock(fullText);
 
         if (extractedCode) {
             codeCache[key] = {
@@ -964,14 +1030,18 @@ ${cppStarter ? `\n**Exact Required C++ Starter Signature (MUST match this class 
                 hasCode: true
             };
             unsavedChanges[key] = true;
+            success = true;
 
             const codeEl = document.getElementById(`code-${key}`);
             if (codeEl) {
                 codeEl.value = extractedCode;
                 markUnsaved(key);
             }
+        } else {
+            lastAIError = 'AI returned response without a recognizable C++ code block.';
         }
     } catch (err) {
+        lastAIError = err.message || 'AI request failed';
         if (contentEl) {
             contentEl.innerHTML = `<div class="ai-error">❌ ${escapeHtml(err.message)}</div>`;
             contentEl.className = 'ai-content';
@@ -981,18 +1051,64 @@ ${cppStarter ? `\n**Exact Required C++ Starter Signature (MUST match this class 
     }
 
     delete aiStreaming[key];
+    return success;
+}
+
+// ---- Reliable C++ Code Block Extractor ----
+function extractCppCodeBlock(fullText) {
+    if (!fullText) return '';
+
+    // 1. Match explicit ```cpp / ```c++ / ```c blocks (never match plain ``` pseudocode blocks!)
+    const cppFenceRegex = /```(?:cpp|c\+\+|c|C\+\+)[^\n]*\r?\n([\s\S]*?)```/g;
+    const cppBlocks = [];
+    let m;
+    while ((m = cppFenceRegex.exec(fullText)) !== null) {
+        if (m[1] && m[1].trim()) {
+            cppBlocks.push(m[1].trim());
+        }
+    }
+    if (cppBlocks.length > 0) {
+        const fullSolution = cppBlocks.find(b => b.includes('#include') || b.includes('class Solution') || b.includes('int main'));
+        return fullSolution || cppBlocks[cppBlocks.length - 1];
+    }
+
+    // 2. Fallback: Check any fenced block that clearly contains C++ code (#include, class Solution, int main)
+    const anyFenceRegex = /```[^\n]*\r?\n([\s\S]*?)```/g;
+    while ((m = anyFenceRegex.exec(fullText)) !== null) {
+        const candidate = (m[1] || '').trim();
+        if (candidate.includes('#include') || candidate.includes('class Solution') || candidate.includes('int main')) {
+            return candidate;
+        }
+    }
+
+    // 3. Fallback: Unclosed ```cpp fence or raw C++ output containing #include / class Solution
+    const startIdx = fullText.indexOf('#include') !== -1
+        ? fullText.indexOf('#include')
+        : fullText.indexOf('class Solution');
+    if (startIdx !== -1) {
+        const lastBrace = fullText.lastIndexOf('}');
+        if (lastBrace > startIdx) {
+            let slice = fullText.slice(startIdx, lastBrace + 1).trim();
+            if (fullText.slice(lastBrace + 1, lastBrace + 5).startsWith(';')) {
+                slice += ';';
+            }
+            return slice.replace(/```$/g, '').trim();
+        }
+    }
+
+    return '';
 }
 
 // ---- Gemini Streaming ----
 async function streamGemini(apiKey, model, systemPrompt, prompt, contentEl) {
     let response = null;
     let retryCount = 0;
-    const maxRetries = 3;
+    const maxRetries = 2;
 
     while (retryCount <= maxRetries) {
         if (retryCount > 0) {
             if (contentEl) {
-                contentEl.innerHTML = `<div class="ai-loading"><div class="ai-loading-dots"><span></span><span></span><span></span></div> ${model} busy, retrying (${retryCount}/${maxRetries})...</div>`;
+                contentEl.innerHTML = `<div class="ai-loading"><div class="ai-loading-dots"><span></span><span></span><span></span></div> ${model} overloaded, retrying (${retryCount}/${maxRetries})...</div>`;
             }
             await new Promise(r => setTimeout(r, 2000 * retryCount));
         }
@@ -1027,34 +1143,76 @@ async function streamGemini(apiKey, model, systemPrompt, prompt, contentEl) {
     return await parseSSEStream(response, contentEl, 'gemini');
 }
 
-// ---- Groq Streaming ----
+// ---- Groq Streaming with Multi-Model Fallback ----
 async function streamGroq(apiKey, model, systemPrompt, prompt, contentEl) {
-    const response = await fetch(GROQ_API_BASE, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-            model: model,
-            messages: [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: prompt },
-            ],
-            temperature: 0.4,
-            max_tokens: 4096,
-            stream: true,
-        }),
-    });
+    const groqChain = [...new Set([
+        model || GROQ_MODEL_EASY,
+        'openai/gpt-oss-120b',
+        'qwen/qwen3.6-27b',
+        'llama-3.3-70b-versatile'
+    ])];
 
-    if (!response.ok) {
-        const errText = await response.text();
-        let errMsg = `Groq Error ${response.status}`;
-        try { errMsg = JSON.parse(errText).error?.message || errMsg; } catch {}
-        throw new Error(errMsg);
+    let lastErr = null;
+
+    for (let mIdx = 0; mIdx < groqChain.length; mIdx++) {
+        const curModel = groqChain[mIdx];
+        let retryCount = 0;
+        const maxRetries = 1;
+
+        while (retryCount <= maxRetries) {
+            if (retryCount > 0) {
+                await new Promise(r => setTimeout(r, 2000 * retryCount));
+            }
+
+            try {
+                const response = await fetch(GROQ_API_BASE, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`,
+                    },
+                    body: JSON.stringify({
+                        model: curModel,
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: prompt },
+                        ],
+                        temperature: 0.3,
+                        max_tokens: 8192,
+                        stream: true,
+                    }),
+                });
+
+                if (response.status === 429 || response.status === 503) {
+                    const errText = await response.text();
+                    let errMsg = `Groq ${curModel} HTTP ${response.status}`;
+                    try { errMsg = JSON.parse(errText).error?.message || errMsg; } catch {}
+                    lastErr = new Error(errMsg);
+                    break; // Try next model in groqChain
+                }
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    let errMsg = `Groq ${curModel} Error ${response.status}`;
+                    try { errMsg = JSON.parse(errText).error?.message || errMsg; } catch {}
+                    lastErr = new Error(errMsg);
+                    break;
+                }
+
+                const text = await parseSSEStream(response, contentEl, 'groq');
+                if (text && text.trim()) {
+                    return text;
+                }
+                lastErr = new Error(`Empty response from Groq ${curModel}`);
+                break;
+            } catch (netErr) {
+                lastErr = netErr;
+                retryCount++;
+            }
+        }
     }
 
-    return await parseSSEStream(response, contentEl, 'groq');
+    throw lastErr || new Error('All Groq models failed');
 }
 
 async function parseSSEStream(response, contentEl, provider) {
@@ -1063,40 +1221,55 @@ async function parseSSEStream(response, contentEl, provider) {
     let fullText = '';
     let buffer = '';
 
-    if (contentEl) contentEl.innerHTML = '';
+    const processLine = (line) => {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith('data:')) return;
+        const data = trimmed.slice(5).trim();
+        if (!data || data === '[DONE]') return;
+
+        try {
+            const parsed = JSON.parse(data);
+            let text = '';
+
+            if (provider === 'gemini') {
+                const parts = parsed.candidates?.[0]?.content?.parts || [];
+                for (const part of parts) {
+                    if (!part.thought && part.text) {
+                        text += part.text;
+                    }
+                }
+            } else {
+                text = parsed.choices?.[0]?.delta?.content || '';
+            }
+
+            if (text) {
+                fullText += text;
+                if (contentEl) {
+                    contentEl.innerHTML = renderMarkdown(fullText) + '<span class="ai-cursor"></span>';
+                    contentEl.scrollTop = contentEl.scrollHeight;
+                }
+            }
+        } catch (e) {}
+    };
 
     while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+            buffer += decoder.decode();
+            if (buffer.trim()) {
+                for (const line of buffer.split('\n')) {
+                    processLine(line);
+                }
+            }
+            break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop() || '';
 
         for (const line of lines) {
-            if (line.startsWith('data: ')) {
-                const data = line.slice(6).trim();
-                if (data === '[DONE]') continue;
-
-                try {
-                    const parsed = JSON.parse(data);
-                    let text = '';
-
-                    if (provider === 'gemini') {
-                        text = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                    } else {
-                        text = parsed.choices?.[0]?.delta?.content || '';
-                    }
-
-                    if (text) {
-                        fullText += text;
-                        if (contentEl) {
-                            contentEl.innerHTML = renderMarkdown(fullText) + '<span class="ai-cursor"></span>';
-                            contentEl.scrollTop = contentEl.scrollHeight;
-                        }
-                    }
-                } catch (e) {}
-            }
+            processLine(line);
         }
     }
 
