@@ -1,0 +1,8 @@
+{
+  "platform": "leetcode",
+  "contestId": "53",
+  "index": "maximum-subarray",
+  "code": "class Solution {\npublic:\n    int maxSubArray(vector<int>& nums) {\n        int n = nums.size();\n        int ans = nums[0], cur = 0;\n        for (int i = 0; i < n; i++) {\n            cur += nums[i];\n            if (cur > ans) ans = cur;\n            if (cur < 0) cur = 0;\n        }\n        return ans;\n    }\n};",
+  "language": "cpp",
+  "savedAt": "2026-11-03T23:33:52"
+}
