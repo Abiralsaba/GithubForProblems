@@ -2,7 +2,7 @@
 # ═══════════════════════════════════════════════════════════════
 #  LC & CF Daily Grind — Universal Startup Script
 #  Handles ALL initialization: deps, dirs, port, server, browser
-#  Works on: macOS, Linux, Windows (Git Bash / WSL)
+#  Works on: macOS, Linux, Windows (Git Bash / PowerShell / WSL)
 # ═══════════════════════════════════════════════════════════════
 
 RED='\033[0;31m'
@@ -26,8 +26,8 @@ echo -e "${NC}"
 echo -e "  ${BOLD}[1/5]${NC} Checking Python..."
 
 PYTHON=""
-for CANDIDATE in python python3 "py -3"; do
-    if $CANDIDATE -c "import sys; sys.exit(0 if sys.version_info.major == 3 else 1)" >/dev/null 2>&1; then
+for CANDIDATE in python python3; do
+    if "$CANDIDATE" -c "import sys; sys.exit(0 if sys.version_info.major == 3 else 1)" >/dev/null 2>&1; then
         PYTHON="$CANDIDATE"
         break
     fi
@@ -38,7 +38,7 @@ if [ -z "$PYTHON" ]; then
     exit 1
 fi
 
-PY_VERSION=$($PYTHON --version 2>&1)
+PY_VERSION=$("$PYTHON" --version 2>&1)
 echo -e "  ${GREEN}✓${NC} Found: $PYTHON ($PY_VERSION)"
 
 # ── Step 2: Verify required files ──────────────────────────────
@@ -79,10 +79,11 @@ case "$OS_TYPE" in
         lsof -ti:$PORT | xargs kill -9 2>/dev/null && echo -e "  ${YELLOW}⚡${NC} Killed existing process on port $PORT" || true
         ;;
     MINGW*|MSYS*|CYGWIN*)
-        PID=$(netstat -aon 2>/dev/null | grep ":$PORT " | grep "LISTENING" | awk '{print $5}' | head -1)
-        if [ -n "$PID" ] && [ "$PID" != "0" ]; then
-            taskkill //F //PID "$PID" >/dev/null 2>&1 && echo -e "  ${YELLOW}⚡${NC} Killed existing process on port $PORT (PID $PID)" || true
-        fi
+        for PID in $(netstat -aon 2>/dev/null | grep ":$PORT " | grep "LISTENING" | awk '{print $5}' | sort -u); do
+            if [ -n "$PID" ] && [ "$PID" != "0" ]; then
+                cmd.exe /c "taskkill /F /PID $PID" >/dev/null 2>&1 && echo -e "  ${YELLOW}⚡${NC} Killed existing process on port $PORT (PID $PID)" || true
+            fi
+        done
         ;;
 esac
 
@@ -98,4 +99,4 @@ echo -e "  ${BOLD}  Stop:${NC} Press ${YELLOW}Ctrl+C${NC}"
 echo -e "  ${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-$PYTHON server.py
+"$PYTHON" -u server.py
